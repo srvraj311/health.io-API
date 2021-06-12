@@ -1,6 +1,6 @@
 # <span style="color:blue">health.io - API - Server</span>
 This is an API server for health.io app, That belongs to the Project health.io.  
-
+Mail at - ```Sourabhraj311@gmail.com``` for source code.
 ### Status 
 ``` Testing```  ``` Alpha```
 
@@ -51,12 +51,11 @@ sort of devices.
   ##### URL will be "localhost:8080/"
   #### Follow API documentation for getting correct URL for Correct Requests.
   
-## Documentation
-# API DOCUMENTATION
+## Documentation# API DOCUMENTATION
 
 ### Before Running Server Locally
 
-Make following Changes to [application.properties](http://application.properties) file in `src/main/resourses` brfore starting the server.
+Make following Changes to [application.properties](http://application.properties) file in `src/main/resourses` berfore starting the server.
 
 ```json
 #spring.data.mongodb.host=
@@ -141,20 +140,19 @@ As soon as all values are sent properly, A new user with following details are c
 Also after creating of new user in DB, a new Dog_tag is assigned to user, and the password is hashed into 64-Bit encrypted key.
 
 The user in DB looks something like this,
-```
+
 `{
-"id": "60b28f26e2b5f6671275360a",  
-"first_name": "Sourabh",  
-"last_name": "Kumar",  
-"mobile_num": "9142865908",  
-"email": "[sourabhraj311@gmail.com](mailto:sourabhraj311@gmail.com)",  
-"password": "d1ftw8jHsds5yupoMczbnSZsQ==",  
-"age": "22",  
-"dog_tag": "DC8E3079-F282-4B2B-8736-9D1E623F471D",  
-"known_device": []`  
+"id": "60b28f26e2b5f6671275360a",
+"first_name": "Sourabh",
+"last_name": "Kumar",
+"mobile_num": "9142865908",
+"email": "[sourabhraj311@gmail.com](mailto:sourabhraj311@gmail.com)",
+"password": "d1ftw8jHsds5yupoMczbnSZsQ==",
+"age": "22",
+"dog_tag": "DC8E3079-F282-4B2B-8736-9D1E623F471D",
+"known_device": []`
 
 `}`
-```
 
 This id is responsible for deletion and updating of users in the DB, However this is hidden from the client API, All the CRUD work will be done using email as unique id and dog_tag.
 
@@ -458,7 +456,16 @@ ACCEPTANCE :
                 "licence_id":"LB019348231",
                 "name" : "Bokaro General Hospital",
                 "address" : "4th Avenue, Sector 4, Bokaro, Jharkhand",
-                "city_name":"Bokaro",
+          {
+    "licence_id": "LB019348233",
+    "name_of_patient":"Sanjeev Kumar",
+    "type_of_emergency":"Car Accident",
+    "address":"Coperative Colony",
+    "intensitty_of_emergency":"Medium",
+    "requirements":"Blood Test, Sedative 21B6 5ml",
+    "time":"21:20:14",
+    "description":"Condition is normal, Normal Wound at Victims Head, Will be easily recoovered in few weeks. No surgeries needed"
+}      "city_name":"Bokaro",
                 "state_name":"Jharkhand",
                 "geolocation" : "23.6743099,86.1434682",
                 "type":"government",
@@ -779,6 +786,100 @@ If the email provided does not match any in database, then
 }
 // Means the user is not registered to send requests.
 ```
+
+# Emergency Cases
+
+## Adding an Emergency Case
+
+Adding an emergency case for a particular Hospital, The Emergency cases does not belong to Hospitals document instead it is available in seperate document named emergency, also the data here is not unique by id, an emergency case is uniquely identified by hospitals licence id that it belongs to or where it has been reported and with the persons name.
+
+URL : `URL/hospitals/emergency`
+
+TYPE : `POST`
+
+ACCEPTANCE :
+
+```json
+{
+    "licence_id": "LB019348233",
+    "name_of_patient":"Sanjeev Kumar",
+    "type_of_emergency":"Car Accident",
+    "address":"Coperative Colony",
+		"intensitty_of_emergency":"Medium", // Must be send via a dropdown or 
+																				// checkbox for Accuracy.
+    "requirements":"Blood Test, Sedative 21B6 5ml",
+    "time":"21:20:14",
+    "description":"Condition is normal, Normal Wound at Victims Head, Will be easily recoovered in few weeks. No surgeries needed"
+}
+```
+
+RESPONSE :
+
+```json
+{
+    "status": "Emergency case Added"
+}
+```
+
+ERROR :
+
+Mostly there is very less chance of error, Still if there is any error the format will contain this.
+
+Also if the format of the POST request is not matched then it will Give error probably.
+
+```json
+{
+	"error":"Exception in thread ......"
+}
+```
+
+## View Emergency Cases
+
+URL : `URL/hospitals/emergency/{id}/`
+
+TYPE : `POST`
+
+ACCEPTANCE :
+
+```json
+Viewing By ID of Hospital will Return List of All Emergency cases in That particular hospital
+// URL/hospitals/emergency/LB019348233
+```
+
+RESPONSE :
+
+```json
+[
+    {
+        "licence_id": "LB019348233",
+        "name_of_patient": "Sanjeev Kumar",
+        "type_of_emergency": "Car Accident",
+        "address": "Coperative Colony",
+        "intensity_of_emergency": null,
+        "requirements": "Blood Test, Sedative 21B6 5ml",
+        "time": "21:20:14",
+        "description": "Condition is normal, Normal Wound at Victims Head, Will be easily recoovered in few weeks. No surgeries needed"
+    },
+		{
+        "licence_id": "LB019348233",
+        "name_of_patient": "Sanjeev Kumar",
+        "type_of_emergency": "Car Accident",
+        "address": "Coperative Colony",
+        "intensity_of_emergency": null,
+        "requirements": "Blood Test, Sedative 21B6 5ml",
+        "time": "21:20:14",
+        "description": "Condition is normal, Normal Wound at Victims Head,
+					 Will be easily recoovered in few weeks. No surgeries needed"
+    }, {}, {}, ......
+]
+```
+
+ERROR
+
+```json
+RESPONSE CODE 204 WITH Error NO_CONTENT
+```  
+  
 
 ## ThankYou
 
