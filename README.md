@@ -837,7 +837,7 @@ Also if the format of the POST request is not matched then it will Give error pr
 
 URL : `URL/hospitals/emergency/{id}/`
 
-TYPE : `POST`
+TYPE : `GET`
 
 ACCEPTANCE :
 
