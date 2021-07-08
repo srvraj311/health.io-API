@@ -51,14 +51,15 @@ sort of devices.
   ##### URL will be "localhost:8080/"
   #### Follow API documentation for getting correct URL for Correct Requests.
   
-## Documentation# API DOCUMENTATION
+## Documentation
+# API DOCUMENTATION
 
 ### Before Running Server Locally
 
 Make following Changes to [application.properties](http://application.properties) file in `src/main/resourses` berfore starting the server.
 
 ```json
-#spring.data.mongodb.host=
+e#spring.data.mongodb.host=
 #spring.data.mongodb.port=
 #spring.data.mongodb.username=
 #spring.data.mongodb.password=
@@ -150,7 +151,9 @@ The user in DB looks something like this,
 "password": "d1ftw8jHsds5yupoMczbnSZsQ==",
 "age": "22",
 "dog_tag": "DC8E3079-F282-4B2B-8736-9D1E623F471D",
-"known_device": []`
+"known_device": [],`
+
+`"saved_hospitals":[]`
 
 `}`
 
@@ -332,7 +335,7 @@ ERRORS :
 
 ```json
 { 
-	"error" : "Runtime Exceptio"
+	"error" : "Runtime Exception"
 }
 // This error will not be created easily. Chances are low
 ```
@@ -451,26 +454,21 @@ TYPE : `POST`
 
 ACCEPTANCE :
 
+The Last Updated field in the hospital will be in format - `SimpleDateFormat("HH:mm:ss dd-MM-yyyy");` for example, `16:59:24 14-06-2021`
+
 ```json
 {
                 "licence_id":"LB019348231",
                 "name" : "Bokaro General Hospital",
                 "address" : "4th Avenue, Sector 4, Bokaro, Jharkhand",
-          {
-    "licence_id": "LB019348233",
-    "name_of_patient":"Sanjeev Kumar",
-    "type_of_emergency":"Car Accident",
-    "address":"Coperative Colony",
-    "intensitty_of_emergency":"Medium",
-    "requirements":"Blood Test, Sedative 21B6 5ml",
-    "time":"21:20:14",
-    "description":"Condition is normal, Normal Wound at Victims Head, Will be easily recoovered in few weeks. No surgeries needed"
-}      "city_name":"Bokaro",
+			          "city_name":"Bokaro",
                 "state_name":"Jharkhand",
                 "geolocation" : "23.6743099,86.1434682",
+								"description":"Description of the Hospital",
+								"contact":"065432109",
                 "type":"government",
                 "grade":"A",
-                "last_updated" : "20210527012132",
+                "last_updated" : "16:59:24 14-06-2021",
                 "no_of_bed":"290",
                 "vacant_bed":"100",
                 "icu":"10",
@@ -531,8 +529,10 @@ ACCEPTANCE : It needs a entire `hospita`l object, same as creating one hospital 
                 "state_name":"Jharkhand",
                 "geolocation" : "23.6743099,86.1434682",
                 "type":"government",
+								"description":"Description of the Hospital",
+								"contact":"065432109",
                 "grade":"A",
-                "last_updated" : "20210527012132",
+                "last_updated" : "16:59:24 14-06-2021",
                 "no_of_bed":"290",
                 "vacant_bed":"100",
                 "icu":"10",
@@ -631,6 +631,8 @@ RESPONSE : Entire hospital will be Returned back if ID exists
     "geolocation": "23.6743099,86.1434682",
     "type": "government",
     "grade": "A",
+		"description":"Description of the Hospital",
+		"contact":"065432109",
     "last_updated": "2021-05-30 08:18:41.053",
     "no_of_bed": "290",
     "vacant_bed": "10",
@@ -729,6 +731,8 @@ RESPONSE : All the list of hospitals will be returned in an Array Form, if all i
         "state_name": "Jharkhand",
         "geolocation": "23.6743099,86.1434682",
         "type": "government",
+				"description":"Description of the Hospital",
+				"contact":"065432109",
         "grade": "A",
         "last_updated": "2021-05-30 08:18:41.053",
         "no_of_bed": "290",
@@ -878,9 +882,199 @@ ERROR
 
 ```json
 RESPONSE CODE 204 WITH Error NO_CONTENT
-```  
-  
+```
 
-## ThankYou
+# SAVING A HOSPITAL
 
-# Sourabh :)
+Users will have an array of Saved Hospitals in their database. This array will be a Set of Strings that will store the `licence_id` of hospitals.  This will help front-end part to impliment a saving feature in Application.
+
+## Saving a Hospital
+
+URL : `URL/clients/hospitals/saveNew/{id}`
+
+TYPE : `POST`
+
+ACCEPTANCE :
+
+The URL will accept a path variable `id` which will be the `licence_id` of the hospital the user want to save to the database. Along with that in body, You need to add two fields
+
+`email` `dog_tag`, First server will verify whether the user is existing or not, then verify the Token and then add the hospital to the database.
+
+Take Care that you only save valid Hospital ID's in the Array.
+
+```json
+Example URL = localhost:8080/client/hospitals/saveNew/LB019348231/
+{
+    "email": "sourabhraj311@gmail.com",
+    "dog_tag": "2335F57D-325E-4B81-A7B5-57343F852843"
+}
+```
+
+RESPONSE :
+
+The server will return `true` boolean type in body of response when status_code is 200,
+
+```json
+true
+```
+
+ERROR :
+
+For every other scenario where status_code is not equal to 200, An error will be provided
+
+```json
+Status Code 400, BAD REQUEST
+This means token Didn't matched, You must logout the user if this is so.
+```
+
+WORKAROUNDS :
+
+Also remember to save the Set of Hospital licence_id in the cloud to your local-storage, this will be helpful to display whether a hospital exists in saved list or not while viewing the entire hospital list in dashboard.
+
+While adding a new user into DB you don't need to provide an empty array for saved_hospitals field, It will be automatically generated in server.
+
+## Getting List of Saved Hospitals
+
+URL : `URL/clients/hospitals/getSaved`
+
+TYPE : `POST`
+
+ACCEPTANCE : The URL will accept only two parameters `email` and `dog_tag` to verify whether user is authorised or not.
+
+```json
+{
+    "email": "sourabhraj311@gmail.com",
+    "dog_tag": "2335F57D-325E-4B81-A7B5-57343F852843"
+}
+```
+
+RESPONSE :
+
+The request will return a list of `licence_id` that are saved onto the users database with the email that was provided inrequest.
+
+
+
+```json
+[
+    "LB019348231",
+		"LB0193482312"
+]
+```
+
+ERROR :
+
+```json
+Status Code 400, BAD REQUEST
+This means token Didn't matched, You must logout the user if this is so.
+```
+
+# Hospial Managemet - Admin
+
+## Updating Details from the Admin's System
+
+The updation is dived two types of request, one that will update entire hospital data at once as mentioned above in hospitals section, another is dividing the main data into sub parts of data
+
+1. Primary Details - Name , Address , Coordinates, Days, timing etc
+2. Availabalities - Beds, ICU, CCU, Ventilators etc.
+3. Facilities - Xray, MRI, etc.
+4. Blood bank
+5. Emergency Cases Encountered.
+
+## Primary Details
+
+URL : `URL/admin/hospitals/updatePrimary`
+
+TYPE : `POST`
+
+ACCEPTANCE : `licence_id` and `email` fields are necessary to complete the request, else error will be thrown, you have to send all the fields even if it is not updated. because the updates on server are tightly coupled.'
+
+WARNING : Always send request with all fields mentioned below, else not-mentioned fields will get null values.
+
+```json
+{
+	"licence_id":"LB019348231",
+	"email":"sourabhraj311@gmail.com",
+	"name": "Bokaro General Hospital, Bokaro Steel City",
+  "description": "This is a sample description for a hospital. Best hospital in Bokaro steel city provided by Bokaro Steel Limited Government Hospital",
+	"address":"Sector 4 Main Road, Bokaro"
+	"city_name": "Bokaro Steel City",
+  "state_name": "Jharkhand",
+  "geolocation": "23.6743099, 86.1434682",
+	"is_24_hr_service": false
+	"opening_time":"08:20",
+  "closing_time":"22:00",
+  "days":"M T W T F S S",
+}
+```
+
+RESPONSE :
+`Success`
+
+```json
+on 200 :
+Details updated successfully
+```
+
+`Error`
+
+```json
+code 200:
+Invalid Request, Feeder not Verified
+```
+
+```json
+code 500:
+Runtime Exception : Hospital Not Found, Means hospital is eighter not created or there is error in user account.
+```
+
+## Availabalities
+
+URL : `URL/admin/hospitals/`updateAvailability
+
+TYPE : `POST`
+
+ACCEPTANCE : `licence_id` and `email` fields are necessary to complete the request, else error will be thrown, you have to send all the fields even if it is not updated. because the updates on server are tightly coupled.
+
+WARNING : Always send request with all fields mentioned below, else not-mentioned fields will get null values.
+
+```json
+{
+		"licence_id":"LB019348231",
+		"email":"sourabhraj311@gmail.com",
+	  "no_of_bed": "120",
+    "vacant_bed": "90",
+    "icu": "10",
+    "vacant_icu": "3",
+    "ccu": "5",
+    "vacant_ccu": "2",
+    "ventilators": "100",
+    "vacant_ventilators": "29",
+    "oxygen_cylinders": "420",
+    "vacant_oxygen_cylinders": "120"
+}
+```
+
+RESPONSE :
+`Success`
+
+```json
+on 200 :
+Details updated successfully
+```
+
+`Error`
+
+```json
+code 200:
+Invalid Request, Feeder not Verified
+```
+
+```json
+code 500:
+Runtime Exception : Hospital Not Found, Means hospital is eighter not created or there is error in user account.
+```
+
+
+
+# Thank You
+## Sourabh
