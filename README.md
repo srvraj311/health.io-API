@@ -21,7 +21,7 @@ For DataBase I used  MongoDB, the data currently is getting stored at MongoDB Cl
 After the development will get Finished, DataBases Will get Shifted to MongoDB server at the Hosts server.  
 Also for now, The testing version is hosted at AWS ec2 instance. To remotely access all the data from all   
 sort of devices.  
-``` The URL is 13.234.119.226:8080```
+``` The URL is http://13.233.215.230:8080/```
 
 ### Configuring Server
 
@@ -59,7 +59,7 @@ sort of devices.
 Make following Changes to [application.properties](http://application.properties) file in `src/main/resourses` berfore starting the server.
 
 ```json
-e#spring.data.mongodb.host=
+#spring.data.mongodb.host=
 #spring.data.mongodb.port=
 #spring.data.mongodb.username=
 #spring.data.mongodb.password=
@@ -107,26 +107,26 @@ Example
 
 # Sign-UP
 
-The Default URL = `URL**/client/users/signup/**`
+The Default URL = `URL/client/users/signup/`
 
 ## Adding a new user
 
-URL : `URL**/client/users/signup/**`
+URL : `URL/client/users/signup/`
 
 TYPE : `POST`
 
 ACCEPTANCE :
 
-```json
+```json5
 {
      "first_name": "Vishal",
      "last_name": "Anand",
-     "mobile_num": "",   // Mobile number feature will be implemented in future, Currently leave it Empty
+     "mobile_num": "",   // Mobile number feature will be implemented in the future, Currently leave it Empty
      "email": "vishalAnand07@gmail.com",
      "password": "randomPassword2",
      "age": "22",
-		 "dog_tag":"",
-		 "known_device":[]
+     "dog_tag":"",
+     "known_device":[]
 }
 
 // Carefull Always send lowercase email - id to POST in all methods.
@@ -142,7 +142,7 @@ Also after creating of new user in DB, a new Dog_tag is assigned to user, and th
 
 The user in DB looks something like this,
 
-`{
+```json5{
 "id": "60b28f26e2b5f6671275360a",
 "first_name": "Sourabh",
 "last_name": "Kumar",
@@ -151,17 +151,16 @@ The user in DB looks something like this,
 "password": "d1ftw8jHsds5yupoMczbnSZsQ==",
 "age": "22",
 "dog_tag": "DC8E3079-F282-4B2B-8736-9D1E623F471D",
-"known_device": [],`
-
-`"saved_hospitals":[]`
-
-`}`
+"known_device": [],
+"saved_hospitals":[]
+}
+```
 
 This id is responsible for deletion and updating of users in the DB, However this is hidden from the client API, All the CRUD work will be done using email as unique id and dog_tag.
 
 RETURN VALUE :
 
-```json
+```json5
 200 OK : This means the user has been succesfully created
 // You will get this if Succes
 {
@@ -175,9 +174,24 @@ Any other value than this means user is not created. Kindly check on Postman for
 If the user already Exists, Then following will be returned.
 
 ```json
+200 OK : The status code is still 200, but will contain error key in JSON Objevt returned.
 {
-		"error" : "User Already Exist with Email Id"
+     "error" : "User Already Exist with Email Id"
 }
+```
+```js
+// Above scenario can be handled using follwing tips
+req.get("url/endpoints/anotherendpoint/").then((response)=>{
+    if(response.code == 200){
+        try{
+            console.log(response.body.error);
+            showToUser(response.data.message)
+        }catch (e) {
+            var loginInformation = response.data;
+            showToUser(response.data.message)
+        }
+    }
+})
 ```
 
 Or if there is any network error, Error message must be printed onto users screen beforehand.
@@ -245,7 +259,7 @@ TYPE : `POST`
 
 ACCEPTANCE :
 
-```json
+```json5
 {
     "email": "sourabhraj311@gmail.com",
     "password": "abcdefgh",
@@ -257,21 +271,21 @@ based on above 3 conditions , this will return 3 possible jsons
 
 RESPONSE :
 
-```json
+```json5
 // If passwords doe not matches
 {
     "error": "Wrong credentials"
 }
 ```
 
-```json
+```json5
 //If there is no user with this email
 {
     "error": "User does not exist"
 }
 ```
 
-```json
+```json5
 //If everything is correct, it will give you a login 
 //token, and you can save it to your localstorage 
 //for accesing further data
@@ -293,7 +307,7 @@ TYPE : `POST`
 
 ACCEPTANCE :
 
-```json
+```json5
 {
 	"email" : "sourabhraj311@gmail.com"
 }
@@ -302,7 +316,7 @@ ACCEPTANCE :
 
 RESPONSE :
 
-```json
+```json5
 {
     "status": "Successfully Send Message"
 }
@@ -314,28 +328,28 @@ ERRORS :
 
 
 
-```json
+```json5
 {
 	"error": "Failed to Send OTP"
 }
 ```
 
-```json
+```json5
 {
-		"error":"Invalid Email"
+     "error":"Invalid Email"
 }
 // When email sent is "", Empty Body
 ```
 
-```json
+```json5
 {
-		"error": "Email does not Exists, Or Invalid Email"
+     "error": "Email does not Exists, Or Invalid Email"
 }
 ```
 
-```json
+```json5
 { 
-	"error" : "Runtime Exception"
+     "error" : "Runtime Exception"
 }
 // This error will not be created easily. Chances are low
 ```
@@ -456,16 +470,16 @@ ACCEPTANCE :
 
 The Last Updated field in the hospital will be in format - `SimpleDateFormat("HH:mm:ss dd-MM-yyyy");` for example, `16:59:24 14-06-2021`
 
-```json
+```json5
 {
                 "licence_id":"LB019348231",
                 "name" : "Bokaro General Hospital",
                 "address" : "4th Avenue, Sector 4, Bokaro, Jharkhand",
-			          "city_name":"Bokaro",
+                "city_name":"Bokaro",
                 "state_name":"Jharkhand",
                 "geolocation" : "23.6743099,86.1434682",
-								"description":"Description of the Hospital",
-								"contact":"065432109",
+                "description":"Description of the Hospital",
+                "contact":"065432109",
                 "type":"government",
                 "grade":"A",
                 "last_updated" : "16:59:24 14-06-2021",
@@ -504,7 +518,7 @@ The Last Updated field in the hospital will be in format - `SimpleDateFormat("HH
 
 The above Request will create a hospital is the DB, if the hospital is successfully created, then Respose will be 200.
 
-```json
+```json5
 {
 	"200" : "Successfully added new hospital"
 }
@@ -529,8 +543,8 @@ ACCEPTANCE : It needs a entire `hospita`l object, same as creating one hospital 
                 "state_name":"Jharkhand",
                 "geolocation" : "23.6743099,86.1434682",
                 "type":"government",
-								"description":"Description of the Hospital",
-								"contact":"065432109",
+                "description":"Description of the Hospital",
+                "contact":"065432109",
                 "grade":"A",
                 "last_updated" : "16:59:24 14-06-2021",
                 "no_of_bed":"290",
@@ -568,7 +582,7 @@ ACCEPTANCE : It needs a entire `hospita`l object, same as creating one hospital 
 
 RESPONSE : For response , if everything is OK, a 200 success message will be displayed
 
-```json
+```json5
 {
 	"200" : "Successfully added new hospital"
 }
@@ -631,8 +645,8 @@ RESPONSE : Entire hospital will be Returned back if ID exists
     "geolocation": "23.6743099,86.1434682",
     "type": "government",
     "grade": "A",
-		"description":"Description of the Hospital",
-		"contact":"065432109",
+    "description":"Description of the Hospital",
+    "contact":"065432109",
     "last_updated": "2021-05-30 08:18:41.053",
     "no_of_bed": "290",
     "vacant_bed": "10",
@@ -668,7 +682,7 @@ RESPONSE : Entire hospital will be Returned back if ID exists
 
 If ID does not Exists in DB the,
 
-```json
+```json5
 {
     "timestamp": "2021-05-30T03:00:22.256+00:00",
     "status": 500,
@@ -684,7 +698,7 @@ IF Dog_Tag does not matches, You have to request Login again to generate one,
 
 Sample error when does not matched is
 
-```json
+```json5
 Status 406 , Not Accepted
 //This response is not in json format, Kindly consider it carefully
 ```
@@ -711,7 +725,7 @@ TYPE : `POST`
 
 ACCEPTANCE :  `email,` `dog_tag`
 
-```json
+```json5
 {
     "email": "sourabhraj311@gmail.com",
     "dog_tag": "7198F4EC-7ADB-422A-AA31-3EB562A4689B"
@@ -721,7 +735,7 @@ ACCEPTANCE :  `email,` `dog_tag`
 
 RESPONSE : All the list of hospitals will be returned in an Array Form, if all info are correct
 
-```json
+```json5
 [
     {
         "licence_id": "LB019348231",
@@ -731,8 +745,8 @@ RESPONSE : All the list of hospitals will be returned in an Array Form, if all i
         "state_name": "Jharkhand",
         "geolocation": "23.6743099,86.1434682",
         "type": "government",
-				"description":"Description of the Hospital",
-				"contact":"065432109",
+        "description":"Description of the Hospital",
+        "contact":"065432109",
         "grade": "A",
         "last_updated": "2021-05-30 08:18:41.053",
         "no_of_bed": "290",
@@ -772,14 +786,14 @@ IF Dog_Tag does not matches, You have to request Login again to generate one,
 
 Sample error when does not matched is
 
-```json
+```json5
 Status 406 , Not Accepted
 //This response is not in json format, Kindly consider it carefully
 ```
 
 If the email provided does not match any in database, then
 
-```json
+```json5
 {
     "timestamp": "2021-05-30T03:36:32.613+00:00",
     "status": 500,
@@ -803,7 +817,7 @@ TYPE : `POST`
 
 ACCEPTANCE :
 
-```json
+```json5
 {
     "licence_id": "LB019348233",
     "name_of_patient":"Sanjeev Kumar",
@@ -819,7 +833,7 @@ ACCEPTANCE :
 
 RESPONSE :
 
-```json
+```json5
 {
     "status": "Emergency case Added"
 }
@@ -831,7 +845,7 @@ Mostly there is very less chance of error, Still if there is any error the forma
 
 Also if the format of the POST request is not matched then it will Give error probably.
 
-```json
+```json5
 {
 	"error":"Exception in thread ......"
 }
@@ -845,14 +859,14 @@ TYPE : `GET`
 
 ACCEPTANCE :
 
-```json
+```json5
 Viewing By ID of Hospital will Return List of All Emergency cases in That particular hospital
 // URL/hospitals/emergency/LB019348233
 ```
 
 RESPONSE :
 
-```json
+```json5
 [
     {
         "licence_id": "LB019348233",
@@ -880,7 +894,7 @@ RESPONSE :
 
 ERROR
 
-```json
+```json5
 RESPONSE CODE 204 WITH Error NO_CONTENT
 ```
 
@@ -922,7 +936,7 @@ ERROR :
 
 For every other scenario where status_code is not equal to 200, An error will be provided
 
-```json
+```json5
 Status Code 400, BAD REQUEST
 This means token Didn't matched, You must logout the user if this is so.
 ```
@@ -954,16 +968,17 @@ The request will return a list of `licence_id` that are saved onto the users dat
 
 
 
-```json
+```json5
 [
     "LB019348231",
-		"LB0193482312"
+	"LB0193482312"
 ]
 ```
+You can use the following to fetch hospitals with these id and display in saved hospitals screen.
 
 ERROR :
 
-```json
+```json5
 Status Code 400, BAD REQUEST
 This means token Didn't matched, You must logout the user if this is so.
 ```
@@ -1039,9 +1054,9 @@ WARNING : Always send request with all fields mentioned below, else not-mentione
 
 ```json
 {
-		"licence_id":"LB019348231",
-		"email":"sourabhraj311@gmail.com",
-	  "no_of_bed": "120",
+    "licence_id":"LB019348231",
+    "email":"sourabhraj311@gmail.com",
+    "no_of_bed": "120",
     "vacant_bed": "90",
     "icu": "10",
     "vacant_icu": "3",
@@ -1055,9 +1070,10 @@ WARNING : Always send request with all fields mentioned below, else not-mentione
 ```
 
 RESPONSE :
+
 `Success`
 
-```json
+```json5
 on 200 :
 Details updated successfully
 ```
