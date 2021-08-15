@@ -405,7 +405,7 @@ TYPE : `POST`
 
 ACCEPTANCE :
 
-```json
+```json5
 { 
 	"email":"sourabhraj311@gmail.com",
 	"otp":"123456",
