@@ -21,7 +21,7 @@ For DataBase I used  MongoDB, the data currently is getting stored at MongoDB Cl
 After the development will get Finished, DataBases Will get Shifted to MongoDB server at the Hosts server.  
 Also for now, The testing version is hosted at AWS ec2 instance. To remotely access all the data from all   
 sort of devices.  
-``` The URL is http://13.233.215.230:8080/```
+``` The URL is https://health-io-app.herokuapp.com/```
 
 ### Configuring Server
 
