@@ -34,7 +34,7 @@ For DataBase I used MongoDB, the data currently is getting stored at MongoDB Clu
 Make following Changes to [application.properties](http://application.properties) file in `src/main/resourses` berfore
 starting the server.
 
-```json
+```json5
 #spring.data.mongodb.host=
 #spring.data.mongodb.port=
 #spring.data.mongodb.username=
