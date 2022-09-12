@@ -7,7 +7,7 @@ Mail at - ```Sourabhraj311@gmail.com``` for source code.
 ### Status
 
 ``` Pre-Release```  ``` Up and Functional, Handling Minor Edge Cases``` ->
-[```Live  version```](https://health-io.herokuapp.com/)
+[```Live  version```](https://healthio-app.herokuapp.com/)
 
 ### About
 
